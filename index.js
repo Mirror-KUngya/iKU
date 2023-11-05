@@ -20,7 +20,7 @@ app.use('/missions', missionRouter);
 app.use('/checkList', checkListRouter);
 app.use('/setting', settingRouter);
 
-express.Router().get('/test', async (req, res) => {
+app.get('/test', (req, res) => {
     res.json({"test": "success"});
 });
 
