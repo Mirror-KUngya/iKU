@@ -12,7 +12,7 @@ face_mesh = mp_face_mesh.FaceMesh(max_num_faces=1)
 drawing_spec = mp.solutions.drawing_utils.DrawingSpec(thickness=1, circle_radius=1)
 
 # 웹캠에서 비디오를 가져오기
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 # 프레임레이트를 확인
 fps = cap.get(cv2.CAP_PROP_FPS)

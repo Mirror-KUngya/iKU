@@ -18,7 +18,7 @@ router.get('/:mission', (req, res) => {
   else if (mission === 'clap') targetFile = 'clap.py';
   else if (mission === 'side') targetFile = 'side.py';
 
-  const pythonProcess = spawn('python3', [`pythonSrc/${targetFile}`]);
+  const pythonProcess = spawn('python', [`pythonSrc/${targetFile}`]);
 
   pythonProcess.stdout.on('data', data => {
     const message = data.toString();
