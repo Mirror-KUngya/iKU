@@ -60,7 +60,7 @@ const UserSchema = new mongoose.Schema({
         Exercise: {
             type: Boolean
         },
-        WordChin: {
+        WordChain: {
             type: Boolean
         }
     }],
