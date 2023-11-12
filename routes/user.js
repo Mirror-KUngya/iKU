@@ -70,10 +70,10 @@ router.post("/signUp", async (req, res) => {
       UserType: UserType,
       Mission: {
         MissionDate: date.formatDate(),
+        Clap: false,
         Smile: false,
-        Game: false,
         Exercise: false,
-        Movement: false
+        WordChain: false
       },
       Notice_hasCompleted: true,
       Notice_ifNon: true, // 나중에 디바이스 토큰 값 추가

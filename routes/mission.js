@@ -20,7 +20,7 @@ router.get("/:UserID/:MissionDate", async (req, res) => {
         }
         let mission = user.Mission.find(m => m.MissionDate === MissionDate);
         if (!mission) {
-            mission = { MissionDate: MissionDate, Smile: false, Game: false, Exercise: false, Movement: false };
+            mission = { MissionDate: MissionDate, Clap: false, Smile: false, Exercise: false, WordChain: false };
             user.Mission.push(mission);
             await user.save();
         }

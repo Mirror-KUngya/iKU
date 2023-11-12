@@ -53,16 +53,16 @@ const UserSchema = new mongoose.Schema({
             unique: true,
             required: true
         },
-        Smile: {
+        Clap: {
             type: Boolean
         },
-        Game: {
+        Smile: {
             type: Boolean
         },
         Exercise: {
             type: Boolean
         },
-        Movement: {
+        WordChin: {
             type: Boolean
         }
     }],
