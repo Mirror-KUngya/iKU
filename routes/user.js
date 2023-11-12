@@ -14,7 +14,7 @@ router.post("/isDuplicated", async (req, res) => {
     let user = await User.findOne({ UserID });
     if (user) {
       console.log("ID already exists.");
-      return res.status(401).json({ "message": "User already exists." });
+      return res.status(202).json({ "message": "User already exists." });
     }
     return res.status(201).json({ "NewUserID": UserID });
   } catch (error) {

@@ -4,12 +4,19 @@ const CheckList = require("../models/CheckList");
 
 // 체크리스트 조회
 router.get("/:UserID", async (req, res) => {
-    const { UserID } = req.params.UserID;
+    const UserID = req.params.UserID;
     try {
         let checkList = await CheckList.findOne({ UserID });
         if (!checkList) {
-            console.log("ID doesn't exist.");
-            return res.status(404).json({ "message": "User dose not exist." });
+            // 체크리스트 추가
+            checkList = new CheckList({UserID: UserID});
+            await checkList.save();
+        }
+        // List의 모든 항목 출력
+        if (checkList.List && checkList.List.length > 0) {
+            checkList.List.forEach(item => {
+                console.log(item.toDo);
+            });
         }
         return res.status(200).json(checkList.List);
     } catch (error) {
