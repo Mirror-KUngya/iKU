@@ -10,6 +10,7 @@ const formatDate = require("../utils/date");
 // ID 중복확인
 router.post("/isDuplicated", async (req, res) => {
   const { UserID } = req.body;
+  // ID 길이 확인 추가
   try {
     let user = await User.findOne({ UserID });
     if (user) {
@@ -146,7 +147,7 @@ router.post("/signIn", async (req, res) => {
     // bycrypt를 사용하여 입력된 비밀번호와 저장된 해시된 비밀번호를 비교
     const isMatch = await bycrypt.compare(UserPW, user.UserPW);
     if (!isMatch) {
-      return res.status(401).json({ "message": "ID or Password is wrong." });
+      return res.status(202).json({ "message": "ID or Password is wrong." });
     }
 
     // 로그인 성공
