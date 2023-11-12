@@ -156,6 +156,23 @@ router.post("/signIn", async (req, res) => {
   }
 });
 
+// 이름 조회
+router.get("/:UserID", async (req, res) => {
+  try {
+    const UserID = req.params.UserID;
+    const user = await User.findOne({ UserID: UserID });
+    if (user) {
+      return res.status(200).json({
+        UserID: UserID,
+        UserName: user.UserName
+      });
+    }
+    return res.status(404).json({ "message": "User does not exist." });
+  } catch (error) {
+    return res.status(500).json({ "error": error.message });
+  }
+})
+
 // 아이디 찾기
 router.post("/findID", async (req, res) => {
   const { UserPhone } = req.body;
