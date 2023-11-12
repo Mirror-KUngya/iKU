@@ -1,15 +1,17 @@
 const express = require("express");
 const userR = require("./user");
 const User = require("../models/User");
-const date = require("../config/date");
+const date = require("../utils/date");
 const userID = userR.nowID;
 const router = express.Router();
 
 // mission 날짜별로 조회
 // mission 날짜 조회 시 예외 발생 시 해당 날짜 data 삽입
+// -> 수정 필요: cron 작업으로 00시 되면 해당 날짜 data 삽입
 // res에 날짜, 미션 완료 여부
-router.get("/", async (req, res) => {
-    const { UserID, MissionDate } = req.body;
+router.get("/:UserID/:MissionDate", async (req, res) => {
+    const UserID = req.params.UserID;
+    const MissionDate = req.params.MissionDate;
 
     try {
         const user = await User.findOne({ "UserID": UserID });
@@ -54,9 +56,9 @@ router.put("/", async (req, res) => {
             "MissionDate": MissionDate,
             [completeMission]: true
         });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
     }
 });
 

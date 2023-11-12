@@ -3,8 +3,8 @@ const router = express.Router();
 const CheckList = require("../models/CheckList");
 
 // 체크리스트 조회
-router.get("/", async (req, res) => {
-    const { UserID } = req.body;
+router.get("/:UserID", async (req, res) => {
+    const { UserID } = req.params.UserID;
     try {
         let checkList = await CheckList.findOne({ UserID });
         if (!checkList) {

@@ -1,10 +1,11 @@
 const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
-const date = require("../config/date");
+const date = require("../utils/date");
 const bycrypt = require("bcryptjs"); // 암호화 모듈
-const formatDate = require("../config/date");
-var nowID = "";
+const formatDate = require("../utils/date");
+//const authenticateJWT = require("../middleware/authenticate");
+//const authorizeRoles = require("../middleware/authorize");
 
 // ID 중복확인
 router.post("/isDuplicated", async (req, res) => {
@@ -18,11 +19,26 @@ router.post("/isDuplicated", async (req, res) => {
     return res.status(201).json({ "NewUserID": UserID });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({"message": error.message});
+    return res.status(500).json({ "message": error.message });
   }
 });
 
-// 회원가입
+// 노인 회원 가입 여부
+router.post("/isExist", async (req, res) => {
+  const { SilverID, SilverPW } = req.body;
+  try {
+    let silverUser = await User.findOne({ UserID: SilverID });
+    if (!silverUser) {
+      return res.status(401).json({ "message": "User does not exists." });
+    }
+    return res.status(200);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+});
+
+// 노인 회원가입
 router.post("/signUp", async (req, res) => {
   const {
     UserName,
@@ -34,8 +50,7 @@ router.post("/signUp", async (req, res) => {
     BirthMonth,
     BirthDay,
     UserType,
-    GuardPhone,
-    Relationship } = req.body;
+  } = req.body;
 
   try {
     let user = await User.findOne({ UserPhone });
@@ -44,36 +59,76 @@ router.post("/signUp", async (req, res) => {
       return res.status(401).json({ "message": "User already exists." });
     }
     user = new User({
-      UserName,
-      UserPhone,
-      UserAddress,
-      UserID,
-      UserPW,
-      BirthYear,
-      BirthMonth,
-      BirthDay,
-      UserType,
-      GuardPhone,
-      Relationship,
+      UserName: UserName,
+      UserPhone: UserPhone,
+      // UserAddress,
+      UserID: UserID,
+      UserPW: UserPW,
+      BirthYear: BirthYear,
+      BirthMonth: BirthMonth,
+      BirthDay: BirthDay,
+      UserType: UserType,
       Mission: {
         MissionDate: date.formatDate(),
         Smile: false,
         Game: false,
         Exercise: false,
         Movement: false
-      }
+      },
+      Notice_hasCompleted: true,
+      Notice_ifNon: true, // 나중에 디바이스 토큰 값 추가
     });
 
     // 비밀번호 암호화
     user.UserPW = await bycrypt.hash(UserPW, 10);
 
     await user.save();
-    return res.status(201).json({"UserID":user.UserID});
+    return res.status(201).json({ "UserID": user.UserID });
 
   } catch (error) {
     console.log(error.message);
     return res.status(500).send(error.message);
   }
+});
+
+// 보호자 회원가입
+router.post("/signUpGaurd", async (req, res) => {
+  const {
+    UserID,
+    UserPW,
+    UserType,
+    UserName,
+    UserPhone,
+    RelationshipWithSilver,
+    SilverID,
+    SilverPW
+  } = req.body;
+
+  try {
+    const user = await User.findOne({ UserID: SilverID });
+    if (user && UserType === "보호자 회원") {
+      user.Gaurd = {
+        GaurdName: UserName,
+        GuardID: UserID,
+        GuardPW: UserPW,
+        GuardPhone: UserPhone,
+        UserType: UserType,
+        RelationshipWithSilver: RelationshipWithSilver,
+        SilverID: SilverID,
+        SilverPW: SilverPW,
+        Notice_hasCompleted: true,
+        Notice_ifNon: true
+      }
+      // FCM 디바이스 토큰
+      await user.save();
+      console.log("보호자 정보");
+      return res.status(200).json({ UserID: UserID });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+
 });
 
 // 로그인
@@ -93,7 +148,7 @@ router.post("/signIn", async (req, res) => {
     }
 
     // 로그인 성공
-    return res.status(200).json({ "UserID": user.UserID});
+    return res.status(200).json({ "UserID": user.UserID, "UserName": user.UserName });
   } catch (error) { // 로그인 실패
     return res.status(500).json({ "error": error.message });
   }
@@ -102,7 +157,7 @@ router.post("/signIn", async (req, res) => {
 // 아이디 찾기
 router.post("/findID", async (req, res) => {
   const { UserPhone } = req.body;
-
+  // 이름, 전화번호롤 찾기
   try {
     const user = await User.findOne({ UserPhone });
 
@@ -113,7 +168,7 @@ router.post("/findID", async (req, res) => {
     res.status(200).json({ "UserID": user.UserID });
   }
   catch (error) {
-    res.status(500).json({"message": error.message});
+    res.status(500).json({ "message": error.message });
   }
 });
 
@@ -132,14 +187,14 @@ router.post("/findPW", async (req, res) => {
       const salt = await bycrypt.genSalt(10);
       user.UserPW = await bycrypt.hash(newPW, salt);
       await user.save();
-      return res.status(200).json({"message": "Password has been reset successfully."});
+      return res.status(200).json({ "message": "Password has been reset successfully." });
     }
     else {
-      return res.status(401).json({"message": "Phone number does not match."});
+      return res.status(401).json({ "message": "Phone number does not match." });
     }
 
   } catch (error) {
-    return res.status(500).json({"message": error.message});
+    return res.status(500).json({ "message": error.message });
   }
 });
 

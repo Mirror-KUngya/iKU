@@ -65,7 +65,13 @@ const UserSchema = new mongoose.Schema({
         Movement: {
             type: Boolean
         }
-    }]
+    }],
+    Notice_hasCompleted: {
+        type: Boolean
+    },
+    Notice_ifNon: {
+        type: Boolean
+    }
 });
 
 module.exports = User = mongoose.model("Users", UserSchema, "Users")
