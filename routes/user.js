@@ -50,6 +50,7 @@ router.post("/signUp", async (req, res) => {
     BirthMonth,
     BirthDay,
     UserType,
+    GuardPhone
   } = req.body;
 
   try {
@@ -61,13 +62,14 @@ router.post("/signUp", async (req, res) => {
     user = new User({
       UserName: UserName,
       UserPhone: UserPhone,
-      // UserAddress,
+      UserAddress: UserAddress,
       UserID: UserID,
       UserPW: UserPW,
       BirthYear: BirthYear,
       BirthMonth: BirthMonth,
       BirthDay: BirthDay,
       UserType: UserType,
+      GuardPhone: GuardPhone,
       Mission: {
         MissionDate: date.formatDate(),
         Clap: false,

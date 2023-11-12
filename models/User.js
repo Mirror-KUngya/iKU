@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     UserType: {
-        type: Number,
+        type: String,
         required: true
     },
     GuardPhone: {
@@ -44,13 +44,11 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     Relationship: {
-        type: String,
-        required: true
+        type: String
     },
     Mission: [{
         MissionDate: {
             type: String,
-            unique: true,
             required: true
         },
         Clap: {
