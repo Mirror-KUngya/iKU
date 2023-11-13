@@ -10,7 +10,8 @@ const CheckListSchema = new mongoose.Schema({
     List: [
         {
             toDo: {
-                type: String
+                type: String,
+
             }
         }
     ]

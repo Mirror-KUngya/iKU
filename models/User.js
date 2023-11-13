@@ -64,6 +64,45 @@ const UserSchema = new mongoose.Schema({
             type: Boolean
         }
     }],
+    GaurdName: {
+        GuardID: {
+            type: String,
+            unique: true,
+            required: true
+        },
+        GuardPW: {
+            type: String,
+            required: true
+        },
+        GuardPhone: {
+            type: String,
+            required: true
+        },
+        UserType: {
+            type: String,
+            required: true
+        },
+        RelationshipWithSilver:{
+            type: String,
+            required: true
+        },
+        SilverID: {
+            type: String,
+            required: true
+        },
+        SilverPW: {
+            type: String,
+            required: true
+        },
+        Notice_hasCompleted: {
+            type: String,
+            required: true
+        },
+        Notice_ifNon: {
+            type: String,
+            required: true
+        }
+    },
     Notice_hasCompleted: {
         type: Boolean
     },
