@@ -41,11 +41,11 @@ router.put("/", async (req, res) => {
             "UserID": UserID,
             "Mission.MissionDate": MissionDate
         },
-        {
-            $set: {
-                ["Mission.$." + completeMission]: true
-            }
-        });
+            {
+                $set: {
+                    ["Mission.$." + completeMission]: true
+                }
+            });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({ "message": "User or Mission not found" });
@@ -62,5 +62,35 @@ router.put("/", async (req, res) => {
     }
 });
 
+// 일괄 false로
+router.put("/", async (req, res) => {
+    try {
+        const { UserID, MissionDate } = req.body;
+        const result = await User.updateOne({
+            "UserID": UserID,
+            "Mission.MissionDate": MissionDate
+        },
+            {
+                $set: {
+                    ["Mission.Clap"]: false,
+                    ["Mission.Smile"]: false,
+                    ["Mission.Exercise"]: false,
+                    ["Mission.WordChain"]: false,
+                }
+            });
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ "message": "User or Mission not found" });
+        }
+
+        res.status(200).json({
+            "UserID": UserID,
+            "MissionDate": MissionDate,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+});
 
 module.exports = router;

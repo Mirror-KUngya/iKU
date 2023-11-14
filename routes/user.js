@@ -3,7 +3,6 @@ const User = require("../models/User");
 const router = express.Router();
 const date = require("../utils/date");
 const bycrypt = require("bcryptjs"); // 암호화 모듈
-const formatDate = require("../utils/date");
 //const authenticateJWT = require("../middleware/authenticate");
 //const authorizeRoles = require("../middleware/authorize");
 
@@ -131,7 +130,6 @@ router.post("/signUpGaurd", async (req, res) => {
     console.log(error);
     return res.status(500).send(error.message);
   }
-
 });
 
 // 로그인
@@ -176,7 +174,7 @@ router.get("/:UserID", async (req, res) => {
 
 // 아이디 찾기
 router.post("/findID", async (req, res) => {
-  const { UserPhone } = req.body;
+  const { UserName ,UserPhone } = req.body;
   // 이름, 전화번호롤 찾기
   try {
     const user = await User.findOne({ UserPhone });
@@ -189,6 +187,23 @@ router.post("/findID", async (req, res) => {
   }
   catch (error) {
     res.status(500).json({ "message": error.message });
+  }
+});
+
+// 비밀번호 리셋을 위한 회원조회
+router.get("/findUser/:UserID/:UserPhone", async (req, res) => {
+  const UserID = req.params.UserID;
+  const UserPhone = req.params.UserPhone;
+
+  try {
+    const user = await User.findOne({UserID: UserID, UserPhone: UserPhone});
+    if (!user) {
+      return res.status(404).json({ "message": "User does not exist." });
+    }
+    console.log("사용자 조회 성공");
+    return res.status(200).send("사용자 조회 성공");
+  } catch(error) {
+    return res.status(500).json({ "message": error.message });
   }
 });
 
