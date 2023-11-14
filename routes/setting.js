@@ -38,7 +38,8 @@ router.put("/gaurd", async (req, res) => {
             return res.status(404).json({ "message": "User does not exist." });
         } else {
             user.updateOne({ GuardPhone: newGuardPhone });
-            user.Gaurd.GuardPhone.updateOne({GuardPhone: newGuardPhone})
+            user.Gaurd.GuardPhone.updateOne({GuardPhone: newGuardPhone});
+            await user.save();
             return res.status(200).json({ "newGuardPhone": newGuardPhone });
         }
     } catch (error) {
@@ -57,7 +58,8 @@ router.put("/silver", async (req, res) => {
             return res.status(404).json({ "message": "User does not exist." });
         } else {
             user.updateOne({ UserPhone: newPhone});
-            return res.status(200).json({ "newGuardPhone": newGuardPhone });
+            await user.save();
+            return res.status(200).json({ "newGuardPhone": newPhone });
         }
     } catch (error) {
         console.log(error.message);
