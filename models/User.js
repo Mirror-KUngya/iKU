@@ -63,7 +63,7 @@ const UserSchema = new mongoose.Schema({
             type: Boolean
         }
     }],
-    Guard: {
+    Gaurd: {
         GuardID: {
             type: String,
             unique: true

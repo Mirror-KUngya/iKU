@@ -11,12 +11,13 @@ router.get("/:UserID", async (req, res) => {
             console.log("User doesn't exist.");
             return res.status(404).json({ "message": "User does not exist." });
         }
+        console.log(user.Gaurd.RelationshipWithSilver)
         return res.status(200).json({
             UserName: user.UserName,
             UserPhone: user.UserPhone,
             UserType: user.UserType,
-            GaurdPhone: user.Guard.GuardPhone,
-            Relationship: user.Guard.RelationshipWithSilver,
+            GaurdPhone: user.Gaurd.GuardPhone,
+            Relationship: user.Gaurd.RelationshipWithSilver            ,
             Notice_hasCompleted: user.Notice_hasCompleted,
             Notice_ifNon: user.Notice_ifNon
         });
