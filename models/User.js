@@ -40,8 +40,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     GuardPhone: {
-        type: String,
-        required: true
+        type: String
     },
     Relationship: {
         type: String
@@ -64,7 +63,7 @@ const UserSchema = new mongoose.Schema({
             type: Boolean
         }
     }],
-    Gaurd: {
+    Guard: {
         GuardID: {
             type: String,
             unique: true

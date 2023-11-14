@@ -15,8 +15,8 @@ router.get("/:UserID", async (req, res) => {
             UserName: user.UserName,
             UserPhone: user.UserPhone,
             UserType: user.UserType,
-            GaurdPhone: user.GuardPhone,
-            Relationship: user.Relationship,
+            GaurdPhone: user.Guard.GuardPhone,
+            Relationship: user.Guard.RelationshipWithSilver,
             Notice_hasCompleted: user.Notice_hasCompleted,
             Notice_ifNon: user.Notice_ifNon
         });

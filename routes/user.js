@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/User");
+const CheckList = require("../models/CheckList")
 const router = express.Router();
 const date = require("../utils/date");
 const bycrypt = require("bcryptjs"); // 암호화 모듈
@@ -25,16 +26,17 @@ router.post("/isDuplicated", async (req, res) => {
 
 // 노인 회원 가입 여부
 router.post("/isExist", async (req, res) => {
-  const { SilverID, SilverPW } = req.body;
+  const { UserID } = req.body;
   try {
-    let silverUser = await User.findOne({ UserID: SilverID });
-    if (!silverUser) {
-      return res.status(401).json({ "message": "User does not exists." });
+    let user = await User.findOne({ UserID });
+    if (user) {
+      console.log("ID already exists.");
+      return res.status(200)
     }
-    return res.status(200);
+    return res.status(404)
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(error.message);
+    console.log(error.message);
+    return res.status(500).json({ "message": error.message });
   }
 });
 
@@ -235,5 +237,43 @@ router.post("/findPW", async (req, res) => {
     return res.status(500).json({ "message": error.message });
   }
 });
+
+router.delete("/", async (req, res) => {
+  const { UserID } = req.body;
+
+  try {
+    // 사용자 정보 찾기
+    const user = await User.findOne({ UserID });
+    const checkList = await CheckList.findOne({ UserID });
+
+    let userDeleted = false;
+    let checkListDeleted = false;
+
+    if (user) {
+      // 사용자 정보 삭제
+      await User.deleteOne({ UserID });
+      userDeleted = true;
+    }
+
+    if (checkList) {
+      // 체크리스트 정보 삭제
+      await CheckList.deleteOne({ UserID });
+      checkListDeleted = true;
+    }
+
+    // 사용자 정보와 체크리스트 정보가 모두 존재하지 않는 경우
+    if (!userDeleted && !checkListDeleted) {
+      return res.status(404).json({ "message": "User does not exist." });
+    }
+
+    // 삭제 성공 메시지
+    return res.status(200).json({ "message": "User and associated data deleted successfully." });
+
+  } catch(error) {
+    // 서버 오류 처리
+    return res.status(500).json({ "message": error.message });
+  }
+});
+
 
 module.exports = router;
