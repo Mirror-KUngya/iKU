@@ -196,12 +196,15 @@ router.get("/findUser/:UserID/:UserPhone", async (req, res) => {
   const UserPhone = req.params.UserPhone;
 
   try {
-    const user = await User.findOne({UserID: UserID, UserPhone: UserPhone});
+    const user = await User.findOne({UserID: UserID});
     if (!user) {
       return res.status(404).json({ "message": "User does not exist." });
     }
+    if (UserPhone == user.UserPhone) {
+      return res.status(200).send("사용자 조회 성공");
+    }
     console.log("사용자 조회 성공");
-    return res.status(200).send("사용자 조회 성공");
+    return res.status(404).json({ "message": "User does not exist." });
   } catch(error) {
     return res.status(500).json({ "message": error.message });
   }

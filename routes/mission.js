@@ -43,7 +43,7 @@ router.put("/", async (req, res) => {
         },
             {
                 $set: {
-                    ["Mission.$." + completeMission]: true
+                    ["Mission.$." + completeMission]: false
                 }
             });
 
@@ -72,10 +72,10 @@ router.put("/", async (req, res) => {
         },
             {
                 $set: {
-                    ["Mission.Clap"]: false,
-                    ["Mission.Smile"]: false,
-                    ["Mission.Exercise"]: false,
-                    ["Mission.WordChain"]: false,
+                    [Mission.Clap]: false,
+                    [Mission.Smile]: false,
+                    [Mission.Exercise]: false,
+                    [Mission.WordChain]: false,
                 }
             });
 
@@ -85,7 +85,7 @@ router.put("/", async (req, res) => {
 
         res.status(200).json({
             "UserID": UserID,
-            "MissionDate": MissionDate,
+            "MissionDate": MissionDate
         });
     } catch (error) {
         console.log(error);
