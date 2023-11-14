@@ -43,7 +43,7 @@ router.put("/", async (req, res) => {
         },
             {
                 $set: {
-                    ["Mission.$." + completeMission]: false
+                    ["Mission.$." + completeMission]: true
                 }
             });
 
