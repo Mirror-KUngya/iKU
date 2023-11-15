@@ -29,6 +29,24 @@ router.get("/:UserID", async (req, res) => {
 
 
 // 비상 가드 연락망 수정
+// router.put("/gaurd", async (req, res) => {
+//     const { UserID, newGuardPhone } = req.body;
+//     try {
+//         let user = await User.findOne({ UserID });
+//         if (!user) {
+//             console.log("User doesn't exist.");
+//             return res.status(404).json({ "message": "User does not exist." });
+//         } else {
+//             user.updateOne({ GuardPhone: newGuardPhone });
+//             user.Gaurd.updateOne({GuardPhone: newGuardPhone});
+//             await user.save();
+//             return res.status(200).json({ "newGuardPhone": newGuardPhone });
+//         }
+//     } catch (error) {
+//         console.log(error.message);
+//         return res.status(500).send("Server Error")
+//     }
+// });
 router.put("/gaurd", async (req, res) => {
     const { UserID, newGuardPhone } = req.body;
     try {
@@ -37,14 +55,16 @@ router.put("/gaurd", async (req, res) => {
             console.log("User doesn't exist.");
             return res.status(404).json({ "message": "User does not exist." });
         } else {
-            user.updateOne({ GuardPhone: newGuardPhone });
-            user.Gaurd.GuardPhone.updateOne({GuardPhone: newGuardPhone});
+            user.GuardPhone = newGuardPhone;
+            if (user.Gaurd) {
+                user.Gaurd.GuardPhone = newGuardPhone;
+            }
             await user.save();
             return res.status(200).json({ "newGuardPhone": newGuardPhone });
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).send("Server Error")
+        return res.status(500).send("Server Error");
     }
 });
 
