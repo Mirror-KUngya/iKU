@@ -3,7 +3,7 @@ const User = require("../models/User");
 const express = require('express');
 const router = express.Router();
 const scheduleJob = require('../utils/scheduleJob');
-const sendPushNotification = require('../utils/sendPushNotification');
+const sendPushNotification = require('../utils/sendPushNotificationAll');
 
 // 토큰 저장 API
 router.post('/token', async (req, res) => {
@@ -11,21 +11,33 @@ router.post('/token', async (req, res) => {
   //const userID = req.body.UserID;
   console.log('Received token:', token);
   scheduleJob(sendPushNotification, token)
+});
 
-  // try {
-  //   const user = await User.findOne({"UserID": userID});
-  //   if (!user) {
-  //     return res.status(404).json({ "message": "User does not exist." });
-  //   }
-  //   user.Device_token = token; // 토큰 DB에 저장
-  //   scheduleJob(sendPushNotification, token)
-  //   await user.save();
-  //   return res.send(200).send("DB에 토큰 저장 완료")
-  // } catch (error) {
-  //   console.log("토큰 오류");
-  //   console.log(error.message);
-  //   res.status(500).send(error.message);
-  // }
+// 받은 토큰으로 알림 보내기
+router.post("/all/:token", async(req, res)=>{
+
+  let target_token =req.params.token;
+	//target_token은 푸시 메시지를 받을 디바이스의 토큰값입니다
+
+  let message = {
+    notification: {
+      title: '테스트 데이터 발송',
+      body: '데이터가 잘 가나요?',
+    },
+    token: target_token,
+  }
+
+  admin
+    .messaging()
+    .send(message)
+    .then(function (response) {
+      console.log('Successfully sent message: : ', response)
+      return res.status(200).json({success : true})
+    })
+    .catch(function (err) {
+        console.log('Error Sending message!!! : ', err)
+        return res.status(400).json({success : false})
+    });
 });
 
 

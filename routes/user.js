@@ -11,17 +11,22 @@ const bycrypt = require("bcryptjs"); // 암호화 모듈
 router.post("/isDuplicated", async (req, res) => {
   const { UserID } = req.body;
   // ID 길이 확인 추가
-  try {
-    let user = await User.findOne({ UserID });
-    if (user) {
-      console.log("ID already exists.");
-      return res.status(202).json({ "message": "User already exists." });
+  if (UserID != null) {
+    try {
+      let user = await User.findOne({ UserID });
+      if (user) {
+        console.log("ID already exists.");
+        return res.status(202).json({ "message": "User already exists." });
+      }
+      return res.status(201).json({ "NewUserID": UserID });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({ "message": error.message });
     }
-    return res.status(201).json({ "NewUserID": UserID });
-  } catch (error) {
-    console.log(error.message);
+  } else {
     return res.status(500).json({ "message": error.message });
   }
+
 });
 
 // 노인 회원 가입 여부
@@ -52,7 +57,8 @@ router.post("/signUp", async (req, res) => {
     BirthMonth,
     BirthDay,
     UserType,
-    GuardPhone
+    GuardPhone,
+    DeviceToken
   } = req.body;
 
   try {
@@ -80,7 +86,8 @@ router.post("/signUp", async (req, res) => {
         WordChain: false
       },
       Notice_hasCompleted: true,
-      Notice_ifNon: true, // 나중에 디바이스 토큰 값 추가
+      Notice_ifNon: true,
+      DeviceToken: DeviceToken
     });
 
     // 비밀번호 암호화
@@ -105,7 +112,8 @@ router.post("/signUpGaurd", async (req, res) => {
     UserPhone,
     RelationshipWithSilver,
     SilverID,
-    SilverPW
+    SilverPW,
+    GaurdDeviceToken
   } = req.body;
 
   try {
@@ -121,7 +129,8 @@ router.post("/signUpGaurd", async (req, res) => {
         SilverID: SilverID,
         SilverPW: SilverPW,
         Notice_hasCompleted: true,
-        Notice_ifNon: true
+        Notice_ifNon: true,
+        GaurdDeviceToken: GaurdDeviceToken
       }
       // FCM 디바이스 토큰
       await user.save();

@@ -95,6 +95,9 @@ const UserSchema = new mongoose.Schema({
         },
         Notice_ifNon: {
             type: String
+        },
+        GaurdDeviceToken: {
+            type: String
         }
     },
     Notice_hasCompleted: {
@@ -102,6 +105,9 @@ const UserSchema = new mongoose.Schema({
     },
     Notice_ifNon: {
         type: Boolean
+    },
+    DeviceToken: {
+        type: String
     }
 });
 
