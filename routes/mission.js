@@ -1,8 +1,9 @@
 const express = require("express");
+const userR = require("./user");
 const User = require("../models/User");
+const date = require("../utils/date");
+const userID = userR.nowID;
 const router = express.Router();
-const isDone = require("../utils/sendPushNotificationAll");
-const non = require("../utils/sendPushNotificationNon");
 
 // mission 날짜별로 조회
 // mission 날짜 조회 시 예외 발생 시 해당 날짜 data 삽입
@@ -23,17 +24,7 @@ router.get("/:UserID/:MissionDate", async (req, res) => {
             user.Mission.push(mission);
             await user.save();
         }
-        // 미션 모두 완료했을 경우
-        if(mission.Clap && mission.Smile && mission.Exercise && mission.WordChain){
-            isDone.sendPushNotificationAll(user.Gaurd.GaurdDeviceToken);
-            isDone.sendPushNotificationAll(user.DeviceToken);
-        }
-        cron.schedule('0 0 20 * * *', () => {
-            if(!mission.Clap && !mission.Smile && !mission.Exercise && !mission.WordChain) {
-                non.sendPushNotificationNon(user.Gaurd.GaurdDeviceToken);
-                non.sendPushNotificationNon(user.DeviceToken);
-            }
-        });
+
         console.log(mission)
         return res.status(200).json(mission);
     } catch (error) {

@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const date = require("./date");
 
-module.exports.sendPushNotificationNon = (device_token) => {
+module.exports.sendPushNotificationNon = (res, device_token, mission) => {
   // 푸시 메시지 설정
   var message = {
     notification: {
@@ -16,10 +16,10 @@ module.exports.sendPushNotificationNon = (device_token) => {
     .send(message)
     .then(function (response) {
       console.log('Successfully sent message: : ', response)
-      return res.status(200).json({ success: true })
+      return res.status(200).json({ success: true, mission })
     })
     .catch(function (err) {
       console.log('Error Sending message!!! : ', err)
-      return res.status(400).json({ success: false })
+      return res.status(400).json({ success: false, mission })
     });
 };
