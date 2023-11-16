@@ -77,9 +77,9 @@ router.put("/silver", async (req, res) => {
             console.log("User doesn't exist.");
             return res.status(404).json({ "message": "User does not exist." });
         } else {
-            user.updateOne({ UserPhone: newPhone});
+            user.UserPhone = newPhone;
             await user.save();
-            return res.status(200).json({ "newGuardPhone": newPhone });
+            return res.status(200).json({ "newPhone": newPhone });
         }
     } catch (error) {
         console.log(error.message);
